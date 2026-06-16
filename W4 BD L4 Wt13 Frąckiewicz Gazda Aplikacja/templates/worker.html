@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Panel pracownika – Rekrutacja PWR</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f0f0f0;
+    }
+
+    nav {
+      background: #5a0000;
+      color: white;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #f0a0a0;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tabs a {
+      padding: 0.5rem 1.2rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .tabs a.active {
+      background: #5a0000;
+      color: white;
+      border-color: #5a0000;
+    }
+
+    .section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #5a0000;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #5a0000;
+      color: white;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    a.btn {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      background: #5a0000;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    a.btn:hover {
+      background: #7a0000;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .badge.oczekujacy {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.zatwierdzony {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.złożona {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .badge.zatwierdzona {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.przyjety {
+      background: #d4edda;
+      color: #155724;
+      font-weight: bold;
+    }
+
+    .badge.nieprzyjety {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .flash {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .warn {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    button.danger {
+      padding: 0.6rem 1.5rem;
+      background: #cc0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button.danger:hover {
+      background: #990000;
+    }
+
+    input[type=text] {
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <span>Rekrutacja PWR &mdash; Pracownik: {{ session.imie }}</span>
+    <a href="/wyloguj">Wyloguj</a>
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <div class="tabs">
+      <a href="#kandydaci" class="active" onclick="show('kandydaci')">Lista kandydatów</a>
+      <a href="#aplikacje" onclick="show('aplikacje')">Aplikacje</a>
+      <a href="#rekrutacja" onclick="show('rekrutacja')">Zamknięcie rekrutacji</a>
+      <a href="/pracownik/raport">Raport przyjętych ↗</a>
+    </div>
+
+    <!-- KANDYDACI -->
+    <div id="kandydaci" class="tab-content">
+      <div class="section">
+        <h2>Lista kandydatów</h2>
+        <table>
+          <tr>
+            <th>Nazwisko</th>
+            <th>Imię</th>
+            <th>Email</th>
+            <th>PESEL</th>
+            <th>Szczegóły</th>
+          </tr>
+          {% for k in kandydaci %}
+          <tr>
+            <td>{{ k.Nazwisko }}</td>
+            <td>{{ k.Imie }}</td>
+            <td>{{ k.Email }}</td>
+            <td>{{ k.Pesel or '—' }}</td>
+            <td><a class="btn" href="/pracownik/kandydat/{{ k.IdKandydata }}">Weryfikuj</a></td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <!-- APLIKACJE -->
+    <div id="aplikacje" class="tab-content" style="display:none">
+      <div class="section">
+        <h2>Wszystkie aplikacje</h2>
+        <table>
+          <tr>
+            <th>Kandydat</th>
+            <th>Kierunek</th>
+            <th>Limit</th>
+            <th>Punkty</th>
+            <th>Status</th>
+            <th>Akcja</th>
+          </tr>
+          {% for a in aplikacje %}
+          <tr>
+            <td>{{ a.Nazwisko }} {{ a.Imie }}</td>
+            <td>{{ a.NazwaKR }}</td>
+            <td>{{ a.LimitMiejsc }}</td>
+            <td>{{ a.Punkty }}</td>
+            <td><span class="badge {{ a.StatusA }}">{{ a.StatusA }}</span></td>
+            <td>
+              {% if a.StatusA == 'złożona' %}
+              <a class="btn" href="/pracownik/zatwierdz_aplikacje/{{ a.IdKandydata }}/{{ a.IdKierunku }}">Zatwierdź</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <!-- ZAMKNIĘCIE REKRUTACJI -->
+    <div id="rekrutacja" class="tab-content" style="display:none">
+      <div class="section">
+        <h2>Zamknięcie rekrutacji</h2>
+        <div class="warn">
+          <strong>Uwaga:</strong> Ta operacja przydzieli miejsca wszystkim zatwierdzonym kandydatom na podstawie liczby
+          punktów i limitu miejsc na kierunku. Operacji nie można cofnąć.
+        </div>
+        <p>System automatycznie oznaczy kandydatów z najwyższymi punktami jako <strong>przyjęty</strong>, a pozostałych
+          jako <strong>nieprzyjęty</strong>, zgodnie z limitem miejsc każdego kierunku.</p>
+        <form method="POST" action="/pracownik/zamknij_rekrutacje"
+          onsubmit="return confirm('Czy na pewno zamknąć rekrutację? Tej operacji nie można cofnąć.')">
+          <button type="submit" class="danger">Zamknij rekrutację i przydziel miejsca</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tabs a[onclick]').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).style.display = 'block';
+      document.querySelector(`.tabs a[href="#${id}"]`).classList.add('active');
+    }
+    const hash = location.hash.replace('#', '');
+    if (hash && document.getElementById(hash)) show(hash);
+  </script>
+</body>
+
+</html>

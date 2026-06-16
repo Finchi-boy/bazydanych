@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja – Rekrutacja PWR</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            background: #f0f0f0;
+        }
+
+        .box {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            width: 380px;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.6rem;
+            background: #003366;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #004488;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .flash {
+            background: #ffe0e0;
+            border: 1px solid #f88;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>Rejestracja kandydata</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label>Imię <span class="required">*</span></label>
+            <input type="text" name="imie" required>
+            <label>Drugie imię</label>
+            <input type="text" name="drugie_imie">
+            <label>Nazwisko <span class="required">*</span></label>
+            <input type="text" name="nazwisko" required>
+            <label>PESEL <span class="required">*</span></label>
+            <input type="text" name="pesel" maxlength="11" minlength="11" required>
+            <label>Data urodzenia</label>
+            <input type="date" name="data_urodzenia">
+            <label>Telefon</label>
+            <input type="tel" name="telefon">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" name="email" required>
+            <label>Hasło <span class="required">*</span></label>
+            <input type="password" name="haslo" required>
+            <button type="submit">Zarejestruj się</button>
+        </form>
+        <div class="link"><a href="/">Masz już konto? Zaloguj się</a></div>
+    </div>
+</body>
+
+</html>

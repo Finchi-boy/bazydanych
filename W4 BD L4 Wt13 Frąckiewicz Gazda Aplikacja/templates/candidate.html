@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Panel kandydata – Rekrutacja PWR</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f0f0f0;
+    }
+
+    nav {
+      background: #003366;
+      color: white;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav span {
+      font-size: 1.1rem;
+    }
+
+    nav a {
+      color: #aac4e8;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tabs a {
+      padding: 0.5rem 1.2rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .tabs a.active {
+      background: #003366;
+      color: white;
+      border-color: #003366;
+    }
+
+    .section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #003366;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 0.2rem;
+      margin-top: 0.6rem;
+    }
+
+    input,
+    select {
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1.2rem;
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.8rem;
+    }
+
+    button:hover {
+      background: #004488;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #003366;
+      color: white;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .badge.oczekujacy {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.zatwierdzony {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.złożona {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .badge.zatwierdzona {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.przyjety {
+      background: #d4edda;
+      color: #155724;
+      font-weight: bold;
+    }
+
+    .badge.nieprzyjety {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .flash {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    a.del {
+      color: #cc0000;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <span>Rekrutacja PWR &mdash; {{ session.imie }}</span>
+    <a href="/wyloguj">Wyloguj</a>
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <div class="tabs">
+      <a href="#dane" class="active" onclick="show('dane')">Moje dane</a>
+      <a href="#wyniki" onclick="show('wyniki')">Wyniki egzaminów</a>
+      <a href="#osiagniecia" onclick="show('osiagniecia')">Osiągnięcia</a>
+      <a href="#aplikacje" onclick="show('aplikacje')">Aplikacje</a>
+    </div>
+
+    <!-- DANE -->
+    <div id="dane" class="tab-content">
+      <div class="section">
+        <h2>Moje dane</h2>
+        <form method="POST" action="/kandydat/dane">
+          <div class="row">
+            <div>
+              <label>Imię</label>
+              <input type="text" name="imie" value="{{ kandydat.Imie }}" required>
+            </div>
+            <div>
+              <label>Drugie imię</label>
+              <input type="text" name="drugie_imie" value="{{ kandydat.DrugieImie or '' }}">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Nazwisko</label>
+              <input type="text" name="nazwisko" value="{{ kandydat.Nazwisko }}" required>
+            </div>
+            <div>
+              <label>PESEL</label>
+              <input type="text" name="pesel" value="{{ kandydat.Pesel or '' }}" maxlength="11">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Data urodzenia</label>
+              <input type="date" name="data_urodzenia" value="{{ kandydat.DataUrodzenia or '' }}">
+            </div>
+            <div>
+              <label>Telefon</label>
+              <input type="tel" name="telefon" value="{{ kandydat.Telefon or '' }}">
+            </div>
+          </div>
+          <label>Email</label>
+          <input type="email" name="email" value="{{ kandydat.Email }}" required>
+          <button type="submit">Zapisz zmiany</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- WYNIKI -->
+    <div id="wyniki" class="tab-content" style="display:none">
+      <div class="section">
+        <h2>Moje wyniki egzaminów</h2>
+        {% if wyniki %}
+        <table>
+          <tr>
+            <th>Egzamin</th>
+            <th>Wynik</th>
+            <th>Status</th>
+          </tr>
+          {% for w in wyniki %}
+          <tr>
+            <td>{{ w.NazwaE }}</td>
+            <td>{{ w.Wartosc }}</td>
+            <td><span class="badge {{ w.StatusWN }}">{{ w.StatusWN }}</span></td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:#888">Brak dodanych wyników.</p>
+        {% endif %}
+      </div>
+      <div class="section">
+        <h2>Dodaj wynik</h2>
+        <form method="POST" action="/kandydat/wynik">
+          <label>Egzamin</label>
+          <select name="id_egzaminu">
+            {% for e in egzaminy %}
+            <option value="{{ e.IdEgzaminu }}">{{ e.NazwaE }}</option>
+            {% endfor %}
+          </select>
+          <label>Wynik (0–100)</label>
+          <input type="number" name="wartosc" min="0" max="100" step="0.01" required>
+          <button type="submit">Dodaj wynik</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- OSIAGNIECIA -->
+    <div id="osiagniecia" class="tab-content" style="display:none">
+      <div class="section">
+        <h2>Moje osiągnięcia</h2>
+        {% if osiagniecia %}
+        <table>
+          <tr>
+            <th>Nazwa</th>
+            <th>Tytuł</th>
+            <th>Punkty</th>
+            <th>Status</th>
+          </tr>
+          {% for o in osiagniecia %}
+          <tr>
+            <td>{{ o.Nazwa }}</td>
+            <td>{{ o.Tytul }}</td>
+            <td>{{ o.Punkty }}</td>
+            <td><span class="badge {{ o.Status }}">{{ o.Status }}</span></td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:#888">Brak dodanych osiągnięć.</p>
+        {% endif %}
+      </div>
+      <div class="section">
+        <h2>Dodaj osiągnięcie</h2>
+        <form method="POST" action="/kandydat/osiagniecie">
+          <label>Nazwa</label>
+          <input type="text" name="nazwa" required>
+          <label>Tytuł / opis</label>
+          <input type="text" name="tytul" required>
+          <label>Punkty</label>
+          <input type="number" name="punkty" min="0" step="0.5" value="0">
+          <button type="submit">Dodaj osiągnięcie</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- APLIKACJE -->
+    <div id="aplikacje" class="tab-content" style="display:none">
+      <div class="section">
+        <h2>Moje aplikacje</h2>
+        {% if aplikacje %}
+        <table>
+          <tr>
+            <th>Kierunek</th>
+            <th>Poziom</th>
+            <th>Priorytet</th>
+            <th>Data</th>
+            <th>Punkty</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+          {% for a in aplikacje %}
+          <tr>
+            <td>{{ a.Nazwa }}</td>
+            <td>{{ a.Poziom }}</td>
+            <td>{{ a.Priorytet }}</td>
+            <td>{{ a.DataZgloszenia }}</td>
+            <td>{{ a.Punkty }}</td>
+            <td><span class="badge {{ a.StatusA }}">{{ a.StatusA }}</span></td>
+            <td>
+              {% if a.StatusA == 'złożona' %}
+              <a class="del" href="/kandydat/wycofaj/{{ a.IdKierunku }}"
+                onclick="return confirm('Wycofać aplikację?')">Wycofaj</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:#888">Brak złożonych aplikacji.</p>
+        {% endif %}
+      </div>
+      <div class="section">
+        <h2>Złóż aplikację</h2>
+        <form method="POST" action="/kandydat/aplikacja">
+          <label>Kierunek</label>
+          <select name="id_kierunku">
+            {% for k in kierunki %}
+            <option value="{{ k.IdKierunku }}">{{ k.Nazwa }} ({{ k.Poziom }}) – {{ k.NazwaWD }}</option>
+            {% endfor %}
+          </select>
+          <label>Priorytet (1 = najważniejszy)</label>
+          <input type="number" name="priorytet" min="1" max="10" value="1">
+          <button type="submit">Złóż aplikację</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tabs a').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).style.display = 'block';
+      document.querySelector(`.tabs a[href="#${id}"]`).classList.add('active');
+    }
+    // pokazuj zakładkę z hash URL
+    const hash = location.hash.replace('#', '');
+    if (hash) show(hash);
+  </script>
+</body>
+
+</html>

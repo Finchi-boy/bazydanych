@@ -1,116 +1,236 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
   <title>Kandydat – Rekrutacja PWR</title>
   <style>
-    body { font-family: sans-serif; margin: 0; background: #f0f0f0; }
-    nav { background: #5a0000; color: white; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    nav a { color: #f0a0a0; text-decoration: none; font-size: 0.9rem; }
-    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    .back { display: inline-block; margin-bottom: 1rem; color: #5a0000; text-decoration: none; font-size: 0.9rem; }
-    .section { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-    .section h2 { margin-top: 0; font-size: 1.1rem; color: #5a0000; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 2rem; font-size: 0.9rem; }
-    .info-grid span { color: #888; font-size: 0.8rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { background: #5a0000; color: white; padding: 0.5rem; text-align: left; }
-    td { padding: 0.5rem; border-bottom: 1px solid #eee; }
-    a.btn { display: inline-block; padding: 0.25rem 0.7rem; background: #006600; color: white; border-radius: 4px; text-decoration: none; font-size: 0.8rem; }
-    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; }
-    .badge.oczekujacy { background: #fff3cd; color: #856404; }
-    .badge.zatwierdzony { background: #d4edda; color: #155724; }
-    .flash { background: #d4edda; border: 1px solid #c3e6cb; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f0f0f0;
+    }
+
+    nav {
+      background: #5a0000;
+      color: white;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #f0a0a0;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #5a0000;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #5a0000;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 2rem;
+      font-size: 0.9rem;
+    }
+
+    .info-grid span {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #5a0000;
+      color: white;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    a.btn {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      background: #006600;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .badge.oczekujacy {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.zatwierdzony {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .flash {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
-<body>
-<nav>
-  <span>Rekrutacja PWR – Weryfikacja kandydata</span>
-  <a href="/wyloguj">Wyloguj</a>
-</nav>
-<div class="container">
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
-  {% endwith %}
-  <a class="back" href="/pracownik">← Powrót do listy</a>
 
-  <div class="section">
-    <h2>Dane kandydata</h2>
-    <div class="info-grid">
-      <div><span>Imię i nazwisko</span><br>{{ kandydat.ImieKD }} {{ kandydat.DrugieImieKD or '' }} {{ kandydat.NazwiskoKD }}</div>
-      <div><span>PESEL</span><br>{{ kandydat.PeselKD or '—' }}</div>
-      <div><span>Email</span><br>{{ kandydat.EmailKD }}</div>
-      <div><span>Telefon</span><br>{{ kandydat.TelefonKD or '—' }}</div>
-      <div><span>Data urodzenia</span><br>{{ kandydat.DataUrodzeniaKD or '—' }}</div>
+<body>
+  <nav>
+    <span>Rekrutacja PWR – Weryfikacja kandydata</span>
+    <a href="/wyloguj">Wyloguj</a>
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+    <a class="back" href="/pracownik">← Powrót do listy</a>
+
+    <div class="section">
+      <h2>Dane kandydata</h2>
+      <div class="info-grid">
+        <div><span>Imię i nazwisko</span><br>{{ kandydat.Imie }} {{ kandydat.DrugieImie or '' }} {{ kandydat.Nazwisko }}
+        </div>
+        <div><span>PESEL</span><br>{{ kandydat.Pesel or '—' }}</div>
+        <div><span>Email</span><br>{{ kandydat.Email }}</div>
+        <div><span>Telefon</span><br>{{ kandydat.Telefon or '—' }}</div>
+        <div><span>Data urodzenia</span><br>{{ kandydat.DataUrodzenia or '—' }}</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Wyniki egzaminów</h2>
+      {% if kandydat.wyniki %}
+      <table>
+        <tr>
+          <th>Egzamin</th>
+          <th>Wynik</th>
+          <th>Status</th>
+          <th>Akcja</th>
+        </tr>
+        {% for w in kandydat.wyniki %}
+        <tr>
+          <td>{{ w.NazwaE }}</td>
+          <td>{{ w.Wartosc }}</td>
+          <td><span class="badge {{ w.StatusWN }}">{{ w.StatusWN }}</span></td>
+          <td>
+            {% if w.StatusWN == 'oczekujacy' %}
+            <a class="btn" href="/pracownik/zatwierdz_wynik/{{ kandydat.IdKandydata }}/{{ w.IdEgzaminu }}">Zatwierdź</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p style="color:#888">Brak wyników.</p>
+      {% endif %}
+    </div>
+
+    <div class="section">
+      <h2>Osiągnięcia</h2>
+      {% if kandydat.osiagniecia %}
+      <table>
+        <tr>
+          <th>Nazwa</th>
+          <th>Tytuł</th>
+          <th>Punkty</th>
+          <th>Status</th>
+          <th>Akcja</th>
+        </tr>
+        {% for o in kandydat.osiagniecia %}
+        <tr>
+          <td>{{ o.Nazwa }}</td>
+          <td>{{ o.Tytul }}</td>
+          <td>{{ o.Punkty }}</td>
+          <td><span class="badge {{ o.Status }}">{{ o.Status }}</span></td>
+          <td>
+            {% if o.Status == 'oczekujacy' %}
+            <a class="btn"
+              href="/pracownik/zatwierdz_osiagniecie/{{ o.IdOsiagniecia }}/{{ kandydat.IdKandydata }}">Zatwierdź</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p style="color:#888">Brak osiągnięć.</p>
+      {% endif %}
+    </div>
+
+    <div class="section">
+      <h2>Aplikacje</h2>
+      {% if kandydat.aplikacje %}
+      <table>
+        <tr>
+          <th>Kierunek</th>
+          <th>Poziom</th>
+          <th>Priorytet</th>
+          <th>Punkty</th>
+          <th>Status</th>
+        </tr>
+        {% for a in kandydat.aplikacje %}
+        <tr>
+          <td>{{ a.Nazwa }}</td>
+          <td>{{ a.Poziom }}</td>
+          <td>{{ a.Priorytet }}</td>
+          <td>{{ a.Punkty }}</td>
+          <td><span class="badge {{ a.StatusA }}">{{ a.StatusA }}</span></td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p style="color:#888">Brak aplikacji.</p>
+      {% endif %}
     </div>
   </div>
-
-  <div class="section">
-    <h2>Wyniki egzaminów</h2>
-    {% if kandydat.wyniki %}
-    <table>
-      <tr><th>Egzamin</th><th>Wynik</th><th>Status</th><th>Akcja</th></tr>
-      {% for w in kandydat.wyniki %}
-      <tr>
-        <td>{{ w.NazwaE }}</td>
-        <td>{{ w.WartoscWN }}</td>
-        <td><span class="badge {{ w.StatusWN }}">{{ w.StatusWN }}</span></td>
-        <td>
-          {% if w.StatusWN == 'oczekujacy' %}
-          <a class="btn" href="/pracownik/zatwierdz_wynik/{{ kandydat.IdKandydata }}/{{ w.IdEgzaminu }}">Zatwierdź</a>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-    <p style="color:#888">Brak wyników.</p>
-    {% endif %}
-  </div>
-
-  <div class="section">
-    <h2>Osiągnięcia</h2>
-    {% if kandydat.osiagniecia %}
-    <table>
-      <tr><th>Nazwa</th><th>Tytuł</th><th>Punkty</th><th>Status</th><th>Akcja</th></tr>
-      {% for o in kandydat.osiagniecia %}
-      <tr>
-        <td>{{ o.NazwaOS }}</td>
-        <td>{{ o.TytulOS }}</td>
-        <td>{{ o.PunktyOS }}</td>
-        <td><span class="badge {{ o.StatusOS }}">{{ o.StatusOS }}</span></td>
-        <td>
-          {% if o.StatusOS == 'oczekujacy' %}
-          <a class="btn" href="/pracownik/zatwierdz_osiagniecie/{{ o.IdOsiagniecia }}/{{ kandydat.IdKandydata }}">Zatwierdź</a>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-    <p style="color:#888">Brak osiągnięć.</p>
-    {% endif %}
-  </div>
-
-  <div class="section">
-    <h2>Aplikacje</h2>
-    {% if kandydat.aplikacje %}
-    <table>
-      <tr><th>Kierunek</th><th>Poziom</th><th>Priorytet</th><th>Punkty</th><th>Status</th></tr>
-      {% for a in kandydat.aplikacje %}
-      <tr>
-        <td>{{ a.NazwaKR }}</td>
-        <td>{{ a.PoziomKR }}</td>
-        <td>{{ a.PriorytetA }}</td>
-        <td>{{ a.PunktyA }}</td>
-        <td><span class="badge {{ a.StatusA }}">{{ a.StatusA }}</span></td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-    <p style="color:#888">Brak aplikacji.</p>
-    {% endif %}
-  </div>
-</div>
 </body>
+
 </html>
